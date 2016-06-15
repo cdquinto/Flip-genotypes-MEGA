@@ -1,0 +1,54 @@
+\documentclass[12pt]{report}
+\usepackage{geometry}
+\geometry{letterpaper, margin=0.7in}
+\usepackage{tgtermes}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage[spanish]{babel}
+\usepackage{subcaption}
+\usepackage{subfig} 
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{ tipa }
+\usepackage{ textcomp }
+\usepackage{ amssymb }
+\usepackage{ragged2e}
+%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\today
+
+Consuelo Dayzu Quinto
+
+\begin{center}
+\large \textbf{Procesamiento de los datos del microarreglo MEGA}
+\end{center}
+\\
+
+\begin{enumerate}
+\item Filtrar los genotipos por call frequency (0.95) y remover sitios que no son SNPs (ej. indels).
+\item Generar los archivos plink desde Genome Studio.
+\item Migrar estos archivos al mismo directorio que contiene los siguientes archivos:
+\begin{itemize}
+\item \colorbox{Lavender}{list\_snps\_to\_change\_alleles.txt}
+\item \colorbox{Lavender}{new\_positions\_snps.txt}
+\item \colorbox{Lavender}{MEGA\_Consortium\_v2\_15070954\_A1\_b138\_rsids.txt}
+\item \colorbox{Lavender}{1KG\_Omni.bed; 1KG\_Omni.fam; 1KG\_Omni.bim}
+\item \colorbox{Lavender}{convert\_MEGA\_alleles\_sentli.pl}: este script remueve SNPs mapeados en el cromosoma 0, SNPs duplicados (por posicion fisica y por ID), cambia los alelos, actualiza la posicion fisica de dos SNPs, renombra los SNPs, y finalmente calcula la concordancia de genotipos de alguno de estos controles: HG01946, HG01935, NA21440, NA21317.\\ IMPORTANTE 1: Los controles se tienen que llamar de esta maner o habra un error en el programa. \\ IMPORTANTE 2: La concordancia debe de ser mayor a 0.95. 
+\end{itemize}
+\item Correr el script: \colorbox{Lavender}{perl convert\_MEGA\_alleles\_sentli.pl archivo.ped}
+\item Este programa genera los siguientes archivos:
+\begin{itemize}
+\item \colorbox{Lavender}{archivo.flip.ped} y \colorbox{Lavender}{archivo.flip.map}: archivos PLINK finales.
+\item \colorbox{Lavender}{duplicate\_snps\_archivo.txt}: ID de los SNPs que tienen el mismo nombre.
+\item \colorbox{Lavender}{duplicate\_positions\_archivo.txt}: ID de los SNPs que tienen la misma posicion.
+\end{itemize}
+\item Aparte de los archivos procesados, hay dos archivos que se pueden dar a los usuarios:
+\begin{itemize}
+\item \colorbox{Lavender}{multiallelic\_SNPs.txt} tiene la lista de los SNPs que no son bialelicos (9,583 SNPs). 
+\item \colorbox{Lavender}{complementary\_snps.txt} tiene la lista de SNPs cuyos alelos son C/G o A/T (2,036 SNPs).
+\end{itemize}
+\end{enumerate}
+\end{document}

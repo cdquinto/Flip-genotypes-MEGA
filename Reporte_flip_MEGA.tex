@@ -1,0 +1,77 @@
+\documentclass[10pt]{report}
+\usepackage{geometry}
+\geometry{letterpaper, margin=0.7in}
+\usepackage{tgtermes}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage[spanish]{babel}
+\usepackage{subcaption}
+\usepackage{subfig} 
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{ tipa }
+\usepackage{ textcomp }
+\usepackage{ amssymb }
+\usepackage{ragged2e}
+%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\today
+
+Consuelo Dayzu Quinto
+
+\begin{center}
+\large \textbf{Cambio de alelos de acuerdo a la cadena FORWARD y REVERSE en los SNPs del microarreglo MEGA}
+\end{center}
+\\
+
+Usando el manifiesto Multi-EthnicGlobal\_A1.bpm  y los datos crudos de la primera corrida de Maria Avila (maavp1v1), se obtuvo un reporte final (maavp1v1.raw\_FinalReport.txt) que contiene la informacion de los alelos en la cadena Forward para cada SNP en el microarreglo MEGA. \\
+
+Con la informacion de este reporte mas informacion de la base de datos dbSNP y 1KG, hice una lista\\
+ \colorbox{Lavender}{list\_snps\_to\_change\_alleles.txt}. Esta lista contiene el identificador del SNP, los alelos detectados por GenomeStudio, los alelos de dbSNP y 1KG, y la posicion fisica para 664,465 SNPs. \\
+
+Archivo list\_snps\_to\_change\_alleles.txt:\\
+\colorbox{Lavender}{JHU\_8.51371909	A	 G	 T	 C	 51371910}\\
+\colorbox{Lavender}{JHU\_9.117096517	A	 G	 T	 C	 0}\\
+\colorbox{Lavender}{rs55873141	C	 G	 G	 C	 113845176}	\\
+\colorbox{Lavender}{JHU\_2.83159627	A	 G	 T	 C	 83159628}	\\
+\colorbox{Lavender}{rs10806671	A	 G	 T	 C	 170270028}	\\
+\colorbox{Lavender}{2:630995-T-G	A	 C	 T	 G	 630995}	\\
+\colorbox{Lavender}{rs6079035	A	 C	 T	 G	 13368741}	\\
+\colorbox{Lavender}{rs2088629	A	 G	 T	 C	 133287048}	\\
+\colorbox{Lavender}{rs2066705	A	 G	 T	 C	 25937004}	\\
+
+Escribi un script en perl \colorbox{Lavender}{convert\_MEGA\_alleles.pl} para procesar los datos crudos provenientes de GenomeStudio que realiza las siguientes cosas:
+\begin{itemize}
+ \item Remueve SNPs mapeados en el cromosoma cero ($\sim$ 16,749 sin cluster; $\sim$ 10,791 con cluster).
+ \item Remueve SNPs duplicados por ID y por posicion fisica. 
+ \item Cambia los alelos de acuerdo a la lista \colorbox{Lavender}{list\_snps\_to\_change\_alleles.txt} (664,465 SNPs).
+ \item Actualiza la posicion fisica de dos SNPs: rs9522257 y rs9480186 \colorbox{Lavender}{new\_positions\_snps.txt}
+ \item Renombra los SNPs con la lista \colorbox{Lavender}{MEGA\_Consortium\_v2\_15070954\_A1\_b138\_rsids.txt}
+ \end{itemize}
+
+Para correr este script solo se necesita un archivo PED:\\
+\colorbox{Lavender}{perl convert\_MEGA\_alleles.pl archivo.ped}\\
+
+Este script genera:
+\begin{itemize}
+\item archivo.flip.ped y archivo.flip.map
+\item duplicate\_snps\_archivo.txt: ID de los SNPs duplicados
+\item duplicate\_positions\_entrenamiento\_archivo.txt: ID de los SNPs que tienen la misma posicion
+\item to\_remove.txt: ID de los SNPs duplicados que se excluyen del archivo map original
+\end{itemize}
+\\
+
+NOTA IMPORTANTE: Los archivos 
+\colorbox{Lavender}{list\_snps\_to\_change\_alleles.txt; new\_positions\_snps.txt;}\\
+\colorbox{Lavender}{MEGA\_Consortium\_v2\_15070954\_A1\_b138\_rsids.txt} tienen que estar en el mismo directorio donde se encuentren los archivos de plink, y se requiere de la ultima version de plink (plink 1.9).
+
+Aparte de los archivos post-procesados, hay dos archivos que se pueden dar a los usuarios:
+\begin{itemize}
+\item multiallelic\_SNPs.txt tiene la lista de los SNPs que no son bialelicos (9,583 SNPs). 
+\item complementary\_snps.txt tiene la lista de SNPs cuyos alelos son C/G o A/T (2,036 SNPs).
+\end{itemize}
+
+\end{document}
